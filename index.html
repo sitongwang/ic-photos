@@ -15,19 +15,13 @@
     <script>
         var zon = true; // true for comments from zim code
     </script>
-    <script src="https://d309knd7es5f10.cloudfront.net/zim_4.9.0.js"></script>
+    <script src="https://d309knd7es5f10.cloudfront.net/zim_5.js"></script>
     <!-- add _doc to see code -->
     <!-- use zimjs.com/code/distill for minified individual functions! -->
 
     <!-- <script src="code/view.js"></script>
 <script src="code/controller.js"></script> -->
     <script>
-        // SCALING OPTIONS
-        // scaling can have values as follows with full being the default
-        // "fit"		sets canvas and stage to dimensions and scales to fit inside window size
-        // "outside"	sets canvas and stage to dimensions and scales to fit outside window size
-        // "full"		sets stage to window size with no scaling
-        // "tagID"		add canvas to HTML tag of ID - set to dimensions if provided - no scaling
 
         var scaling = "full"; // makes stage the window size but does not scale content
         var width = null;
@@ -41,32 +35,6 @@
             var stage = frame.stage;
             var stageW = frame.width;
             var stageH = frame.height;
-
-            // // 1. load the background assets using frame.loadAssets
-            // frame.loadAssets([
-            // 	"1.png",
-            // 	"2.png",
-            // 	"3.png",
-            // 	"4.png",
-            // 	"5.png",
-            // ], "assets/");
-
-            // var textArea = new zim.TextArea({
-            //         frame: frame,
-            //         // readOnly:true,
-            //         placeholder: "hello"
-            //     })
-            //     .addTo(stage).pos(20, 20);
-            // // textArea.text = "hello world";
-            // textArea.on("input", function() {
-            //     zog(textArea.text)
-            // })
-
-            // zim.timeout(1000, function() {
-            //     textArea.x = 600;
-            //     textArea.resize()
-            //     stage.update();
-            // });
 
            
             frame.loadAssets([
@@ -94,164 +62,185 @@
                         height: 200
                     })
                     .centerReg(stage);
+                    loader.y=330;
                     loader.backing.alpha=0;
                 
                 // var drop = frame.asset("icon.png");
                  
                 
+               var photo;
+
                loader.on("loaded", function(e) {
-                    zim.loop(e.bitmaps,
-                        function(bitmap) {
-                            bitmap.centerReg(
-                                stage,true,0
-                            )
-                             .drag({onTop:false})
-                              .scaleTo(stage,80,80);
-                             // .scale(.7);
-                             // zog(bitmap.scaleX);
-                             filter.scaleTo(bitmap,bitmap.scaleX*100,bitmap.scaleX*100,"both");
-                             filter2.scaleTo(bitmap,bitmap.scaleX*100,bitmap.scaleX*100,"both");
-                             filter3.scaleTo(bitmap,bitmap.scaleX*100,bitmap.scaleX*100,"both");
+                    // zim.loop(e.bitmaps,function(bitmap){
+                         
+                    var bitmap = e.bitmap;
+                    photo = new zim.Container(bitmap.width,bitmap.height);
+                    
+                    bitmap.addTo(photo);
+                    filter.centerReg(photo);
+                     // .drag({onTop:false})
+                    photo.scaleTo(stage,80,80).centerReg(stage,true,0);
+                     // .scale(.7);
+                     // zog(bitmap.scaleX);
+                    filter.scaleTo(photo,100,100,"both",true);
+                    // filter2.scaleTo(bitmap,bitmap.scaleX*100,bitmap.scaleX*100,"both");
+                    // filter3.scaleTo(bitmap,bitmap.scaleX*100,bitmap.scaleX*100,"both");
 
-                        })
-
+                        // })
 
                     loader.removeFrom(stage);
                     stage.update();
                 });
 
-                // 1. make content to be masked
+
+
+    // // 1. make assets that the tabs will sit above (or next to)
+    var page = new zim.Rectangle(650, 100, "black");
+    page.centerReg(stage);
+    page.mouseChildren = true;
+    page.y = 660;
+
+   
+    
+    var picker = new zim.ColorPicker({
+        colors:[frame.pink,frame.blue,frame.green,frame.yellow,frame.orange],
+        cols:5,
+        width:400,
+        greyPicker:false,
+        alphaPicker:false,
+        buttonBar:false,
+        spacing:15,
+        circles:true,
+        drag:false,
+    });
+    picker.selectedIndex = -1;
+    picker.centerReg(page);
+    picker.on("change", function(e) {
+        filter.color = picker.selectedColor;
+        zog(picker.selectedColor);
+        zog(filter.alpha = 0.3);
+        stage.update();
+       
+    });
+    stage.update();
+     
+
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////Stickers/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+               
                 var container = new zim.Container();
-                // stage.addChild(container);
-                // container.x = 100; container.y = 100;
-
-
-                var pic1 = frame.asset("1.png");
-                container.addChild(pic1);
-                pic1.scale(.4);
-                pic1.x = 50;
-                pic1.y = 600;
-
-                var pic2 = frame.asset("2.png");
-                container.addChild(pic2);
-                pic2.scale(.44);
-                pic2.x = 150;
-                pic2.y = 600;
-
-                var pic3 = frame.asset("3.png");
-                container.addChild(pic3);
-                pic3.scale(.35);
-                pic3.x = 270;
-                pic3.y = 600;
-
-                var pic4 = frame.asset("4.png");
-                container.addChild(pic4);
-                pic4.scale(.4);
-                pic4.x = 380;
-                pic4.y = 600;
-
-                var pic5 = frame.asset("5.png");
-                container.addChild(pic5);
-                pic5.scale(.35);
-                pic5.x = 500;
-                pic5.y = 600;
+                
+                zim.loop(5,function(i){
+                  
+                  frame.asset((i+1)+".png")
+                    .centerReg(container)
+                    .scale(.4)
+                    .pos(50+100*i,50);
+        
                  
-//////////////////////////Fliter Label//////////////////////////////////
+                  // container.addChild(pic1);
+                  // pic1.scale(.4);
+                  // pic1.x = 50;
+                
+                })
+                
+                // var pic1 = frame.asset("1.png");
+                // container.addChild(pic1);
+                // pic1.scale(.4);
+                // pic1.x = 50;
+                
 
-                // var button = new zim.Button("CLICK");
-                var label2 = new zim.Label({
+              
+                 
+////////////////////////////sticker Label//////////////////////////////////
+                var stickerLabel = new zim.Label({
                    text:"Stickers",
                    size:20,
                    color:"black",
                    fontOptions:"bold",
                    rollColor:"MediumOrchid"
                 });
-                label2.center(stage);
-                label2.x = 40;
-                label2.y = 50;
-                label2.on("click", function(){
-                     stage.addChild(container);
+                stickerLabel.center(stage);
+                stickerLabel.x = 60;
+                stickerLabel.y = 670;
+                stickerLabel.on("click", function(){
+                     container.centerReg(page);
+                     page.removeChild(picker);
+                     stage.update();
                 });
 
-                // var tabs = new zim.Tabs({
-                //     width:430,
-                //     tabs:["Pink", "Blue", "Green"]
-                // }).centerReg(stage);
-                // tabs.y = 600;
-
-//////////////////////////////////////////////////////////////////////////
-/////////////////////////////filters//////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+///////////////////////////////filters//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
                 
-                var container2 = new zim.Container();
+                var filterHolder = new zim.Container();
 
 
-                var filter = new zim.Rectangle(2000,
-                    2000, frame.pink);
+                var filter = new zim.Rectangle(300,
+                    300, frame.pink);
                 filter.x = 0;
                 filter.y = 0;
                 filter.alpha = 0;
-                filter.centerReg(stage,true,0);
+                // filter.centerReg(stage,true,0);
+                // filter.color = "blue";
 
+                // var filter2 = new zim.Rectangle(2000,
+                //     2000, frame.blue);
+                // filter2.x = 0;
+                // filter2.y = 0;
+                // filter2.alpha = 0;
+                // filter2.centerReg(stage,true,0);
+                
+                
 
-                var filter2 = new zim.Rectangle(2000,
-                    2000, frame.blue);
-                filter2.x = 0;
-                filter2.y = 0;
-                filter2.alpha = 0;
-                filter2.centerReg(stage,true,0);
-                
-                var filter3 = new zim.Rectangle(2000,
-                    2000, frame.green);
-                filter3.x = 0;
-                filter3.y = 0;
-                filter3.alpha = 0;
-                filter3.centerReg(stage,true,0);
-                
+///////////////////////////////////////////////////////////  
+////////////////////////Color Label////////////////////////
+///////////////////////////////////////////////////////////               
                
-                var label3 = new zim.Label({
+                var label1 = new zim.Label({
                    text:"Pink",
                    size:20,
                    color:"pink",
                    fontOptions:"bold",
                    rollColor:"MediumOrchid"
                 });
-                label3.center(container2);
-                label3.x = 160;
-                label3.y = 100;
-                label3.on("click", function(){
+                label1.center(filterHolder);
+                label1.x = 160;
+                label1.y = 100;
+                label1.on("click", function(){
                      // filter.centerReg(stage,true,0);
                    filter.alpha = 0.3;
 
                 });
 
-                var label4 = new zim.Label({
+                var label2 = new zim.Label({
                    text:"Blue",
                    size:20,
                    color:"blue",
                    fontOptions:"bold",
                    rollColor:"MediumOrchid"
                 });
-                label4.center(container2);
-                label4.x = 160;
-                label4.y = 150;
-                label4.on("click", function(){
+                label2.center(filterHolder);
+                label2.x = 160;
+                label2.y = 150;
+                label2.on("click", function(){
                      // filter.centerReg(stage,true,0);
                    filter2.alpha = 0.3;
 
                 });
 
-                var label5 = new zim.Label({
+                var label3 = new zim.Label({
                    text:"Green",
                    size:20,
                    color:"green",
                    fontOptions:"bold",
                    rollColor:"MediumOrchid"
                 });
-                label5.center(container2);
-                label5.x = 160;
-                label5.y = 200;
-                label5.on("click", function(){
+                label3.center(filterHolder);
+                label3.x = 160;
+                label3.y = 200;
+                label3.on("click", function(){
                      // filter.centerReg(stage,true,0);
                    filter3.alpha = 0.3;
 
@@ -265,30 +254,41 @@
                    rollColor:"MediumOrchid"
                 });
                 addFilter.center(stage);
-                addFilter.x = 160;
-                addFilter.y = 50;
+                addFilter.x = 60;
+                addFilter.y = 630;
                 addFilter.on("click", function(){
                      // filter.centerReg(stage,true,0);
-                 stage.addChild(container2);
+                 page.addChild(picker);
+                 page.removeChild(container);
+                 stage.update();
 
                 });
 
-                
-               
-
-
                 // filter.drag({onTop:false});
-                pic1.drag({onTop: false});
-                pic2.drag({onTop: false});
-                pic3.drag({onTop: false});
-                pic4.drag({onTop: false});
-                pic5.drag({onTop: false});
 
-                stage.update();
 
-            });
+//////////////////////////////////////////////////////////////
+///////////////////////////sticker drag///////////////////////               
+//////////////////////////////////////////////////////////////
+                container.drag({onTop: false});
+                container.on("pressup",function(e){
+                    var point = page.localToLocal(e.target.x,e.target.y,photo)
+                    zog(photo.scaleX)
+                    e.target.addTo(photo).drag().pos(point.x,point.y)
+                    .scale(e.target.scaleX / photo.scaleX) 
 
-            stage.update();
+                    stage.update();
+                })
+                // pic2.drag({onTop: false});
+                // pic3.drag({onTop: false});
+                // pic4.drag({onTop: false});
+                // pic5.drag({onTop: false});
+
+               stage.update();
+
+            });/////end of the assets
+
+           
 
         }, null, true); // end of ready - only run once (true)
     </script>
