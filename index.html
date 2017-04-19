@@ -95,7 +95,7 @@
 
 
     // // 1. make assets that the tabs will sit above (or next to)
-    var page = new zim.Rectangle(650, 100, "black");
+    var page = new zim.Rectangle(500, 100, "black");
     page.centerReg(stage);
     page.mouseChildren = true;
     page.y = 660;
@@ -135,8 +135,8 @@
                   
                   frame.asset((i+1)+".png")
                     .centerReg(container)
-                    .scale(.4)
-                    .pos(50+100*i,50);
+                    .scale(.35)
+                    .pos(50+80*i,50);
         
                  
                   // container.addChild(pic1);
@@ -162,7 +162,7 @@
                    rollColor:"MediumOrchid"
                 });
                 stickerLabel.center(stage);
-                stickerLabel.x = 400;
+                stickerLabel.x = 270;
                 stickerLabel.y = 580;
                 stickerLabel.on("click", function(){
                      container.centerReg(page);
@@ -206,7 +206,7 @@
                    rollColor:"MediumOrchid"
                 });
                 label1.center(filterHolder);
-                label1.x = 160;
+                label1.x = 200;
                 label1.y = 100;
                 label1.on("click", function(){
                      // filter.centerReg(stage,true,0);
@@ -238,7 +238,7 @@
                    rollColor:"MediumOrchid"
                 });
                 label3.center(filterHolder);
-                label3.x = 160;
+                label3.x = 180;
                 label3.y = 200;
                 label3.on("click", function(){
                      // filter.centerReg(stage,true,0);
@@ -254,7 +254,7 @@
                    rollColor:"MediumOrchid"
                 });
                 addFilter.center(stage);
-                addFilter.x = 330;
+                addFilter.x = 180;
                 addFilter.y = 580;
                 addFilter.on("click", function(){
                      // filter.centerReg(stage,true,0);
