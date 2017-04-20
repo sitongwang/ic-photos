@@ -102,7 +102,7 @@
     <gap:splash src="res/screen/ios/screen-iphone-portrait-568h-2x.png" gap:platform="ios"     width="640" height="1136" />
 
     <gap:splash src="res/screen/ios/Default-667h@2x.png" platform="ios" width="750" height="1334" />
-    <gap:splashsplash src="res/screen/ios/iphone7.png" platform="ios" width="1242" height="2208" />
+    <gap:splash src="res/screen/ios/iphone7.png" platform="ios" width="1242" height="2208" />
     
     <gap:splash src="res/screen/ios/screen-ipad-portrait.png"           gap:platform="ios"     width="768" height="1024" />
     <gap:splash src="res/screen/ios/screen-ipad-landscape.png"          gap:platform="ios"     width="1024" height="768" />
